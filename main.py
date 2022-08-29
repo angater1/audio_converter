@@ -15,12 +15,12 @@ from PySide6 import QtCore, QtWidgets, QtGui
 
 progressbar = 0
 
+
 class Ui_dialog(object):
 
-    def setupUi(self, dialog, file_name = " ", directory = " "):
+    def setupUi(self, dialog, file_name=" ", directory=" "):
         dialog.setObjectName("dialog")
         dialog.resize(391, 287)
-       
 
         self.file_name = file_name
         self.directory = directory
@@ -28,15 +28,15 @@ class Ui_dialog(object):
         self.buttonBox = QtWidgets.QDialogButtonBox(dialog)
         self.buttonBox.setGeometry(QtCore.QRect(210, 250, 161, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
 
-        #choose file
+        # choose file
         self.pushButton = QtWidgets.QPushButton(dialog, clicked=lambda: self.file())
         self.pushButton.setGeometry(QtCore.QRect(10, 190, 161, 41))
         self.pushButton.setObjectName("chooseFile")
 
-        #choose destination
+        # choose destination
         self.pushButton_2 = QtWidgets.QPushButton(dialog, clicked=lambda: self.destination())
         self.pushButton_2.setGeometry(QtCore.QRect(10, 240, 161, 41))
         self.pushButton_2.setObjectName("chooseDestination")
@@ -51,7 +51,7 @@ class Ui_dialog(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
 
-        #progressbar
+        # progressbar
         self.progressBar = QtWidgets.QProgressBar(dialog)
         self.progressBar.setGeometry(QtCore.QRect(10, 210, 371, 23))
         self.progressBar.setProperty("value", progressbar)
@@ -64,13 +64,13 @@ class Ui_dialog(object):
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
 
-        #yourfile
+        # yourfile
         self.label_2 = QtWidgets.QLabel(dialog)
         self.label_2.setGeometry(QtCore.QRect(20, 110, 91, 21))
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
 
-        #filename
+        # filename
         self.label_3 = QtWidgets.QLabel(dialog)
         self.label_3.setGeometry(QtCore.QRect(100, 112, 100, 21))
         self.label_3.setAlignment(QtCore.Qt.AlignLeft)
@@ -91,26 +91,22 @@ class Ui_dialog(object):
         self.label_6.setAlignment(QtCore.Qt.AlignCenter)
         self.label_6.setObjectName("label_6")
 
-
         self.retranslateUi(dialog)
-        self.buttonBox.accepted.connect(dialog.accept) # type: ignore
-        self.buttonBox.rejected.connect(dialog.reject) # type: ignore
+        self.buttonBox.accepted.connect(dialog.accept)  # type: ignore
+        self.buttonBox.rejected.connect(dialog.reject)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(dialog)
 
     def file(self):
         self.file_name = askopenfilename()
-        #print(self.file_name.split("/"))
+        # print(self.file_name.split("/"))
         self.retranslateUi(dialog)
-        
+
     def destination(self):
         self.directory = askdirectory()
-        #print(self.file_name.split("/"))
+        # print(self.file_name.split("/"))
         self.retranslateUi(dialog)
 
-
     def retranslateUi(self, dialog):
-
-
         _translate = QtCore.QCoreApplication.translate
         dialog.setWindowTitle(_translate("dialog", "Dialog"))
         self.pushButton.setText(_translate("dialog", "Choose audio file"))
@@ -129,12 +125,9 @@ class Ui_dialog(object):
         self.label_6.setText(_translate("dialog", "Destination:"))
 
 
-
-
-
-
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     dialog = QtWidgets.QDialog()
     ui = Ui_dialog()
