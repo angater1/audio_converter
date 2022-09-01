@@ -10,11 +10,10 @@
 
 
 from tkinter.filedialog import *
+
+from PySide6.QtGui import QFont
 from pydub import AudioSegment
 from PySide6 import QtCore, QtWidgets, QtGui
-
-progressbar = 0
-
 
 class Ui_dialog(object):
 
@@ -22,6 +21,7 @@ class Ui_dialog(object):
         dialog.setObjectName("dialog")
         dialog.resize(391, 287)
 
+        self.progressbar = 0
         self.file_name = file_name
         self.directory = directory
 
@@ -55,6 +55,7 @@ class Ui_dialog(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
+        self.comboBox.currentTextChanged.connect(self.on_combobox_changed)
 
         self.comboBox2 = QtWidgets.QComboBox(dialog)
         self.comboBox2.setGeometry(QtCore.QRect(260, 150, 69, 22))
@@ -67,13 +68,13 @@ class Ui_dialog(object):
         self.comboBox2.addItem("")
         self.comboBox2.setVisible(False)
 
+
         # progressbar
         self.progressBar = QtWidgets.QProgressBar(dialog)
         self.progressBar.setGeometry(QtCore.QRect(10, 210, 371, 23))
-        self.progressBar.setProperty("value", progressbar)
         self.progressBar.setTextVisible(False)
         self.progressBar.setObjectName("progressBar")
-        self.progressBar.setVisible(True)
+        self.progressBar.setVisible(False)
 
         self.label = QtWidgets.QLabel(dialog)
         self.label.setGeometry(QtCore.QRect(250, 80, 91, 21))
@@ -107,10 +108,18 @@ class Ui_dialog(object):
         self.label_6.setAlignment(QtCore.Qt.AlignCenter)
         self.label_6.setObjectName("label_6")
 
+        self.label_7 = QtWidgets.QLabel(dialog)
+        self.label_7.setGeometry(QtCore.QRect(100, 150, 220, 50))
+        self.label_7.setAlignment(QtCore.Qt.AlignLeft)
+        self.label_7.setObjectName("label_7")
+        self.label_7.setFont(QFont('Arial', 15))
+        self.label_7.setVisible(False)
+
         self.retranslateUi(dialog)
         self.buttonBox.accepted.connect(dialog.accept)  # type: ignore
         self.buttonBox.rejected.connect(dialog.reject)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(dialog)
+
 
     def file(self):
         self.file_name = askopenfilename()
@@ -121,22 +130,29 @@ class Ui_dialog(object):
         self.directory = askdirectory()
         # print(self.file_name.split("/"))
         self.retranslateUi(dialog)
-
+        self.label_7.setVisible(False)
     def convert(self):
-        if self.comboBox.currentText() == 'mp3':
-            self.comboBox2.setVisible(True)
-            self.retranslateUi(dialog)
-        else:
-            self.comboBox2.setVisible(False)
-            self.retranslateUi(dialog)
+
+
+
         # filename without extension
         input_file = self.file_name.split("/")
         name = str(input_file[-1]).replace('.mp3', '')
         chosen_format = str(self.comboBox.currentText())
         print(name, chosen_format, str(self.file_name), str(self.directory) + "/",
               self.directory + "/" + name + "." + chosen_format)
-        AudioSegment.from_file(self.file_name).export(self.directory + "/" + name + "." + chosen_format,
+        try:
+            AudioSegment.from_file(self.file_name).export(self.directory + "/" + name + "." + chosen_format,
                                                       format=chosen_format)
+            self.progressBar.setVisible(True)
+            self.completed = 0
+            while self.completed < 100:
+                self.completed += 0.0001
+                self.progressBar.setValue(self.completed)
+        except:
+            self.label_7.setVisible(True)
+
+
         # subprocess.call([shutil.which("E:\Music"), 'ffmpeg', '-i', 'Darkness.mp3', 'Darkness.wav'])
         # subprocess.call(['ffmpeg', '-i', 'Darkness.mp3', 'Darkness.wav'])
         # subprocess.call(['ffmpeg', '-i', self.file_name, self.directory + "/" + name + "." + chosen_format])
@@ -144,6 +160,13 @@ class Ui_dialog(object):
         # sound = AudioSegment.from_mp3(self.file_name)
         # sound.export(self.directory + "/" + name + "." + chosen_format, format=chosen_format)
 
+    def on_combobox_changed(self):
+        if self.comboBox.currentText() == 'mp3':
+            self.comboBox2.setVisible(True)
+            self.retranslateUi(dialog)
+        else:
+            self.comboBox2.setVisible(False)
+            self.retranslateUi(dialog)
     def retranslateUi(self, dialog):
         _translate = QtCore.QCoreApplication.translate
         dialog.setWindowTitle(_translate("dialog", "Dialog"))
@@ -162,6 +185,7 @@ class Ui_dialog(object):
         self.label_4.setText(_translate("dialog", "-------->"))
         self.label_5.setText(_translate("dialog", self.directory))
         self.label_6.setText(_translate("dialog", "Destination:"))
+        self.label_7.setText(_translate("dialog", "CHOOSE OUTPUT!"))
         self.comboBox2.setItemText(0, _translate("dialog", "8 kbps"))
         self.comboBox2.setItemText(1, _translate("dialog", "32 kbps"))
         self.comboBox2.setItemText(2, _translate("dialog", "64 kbps"))
