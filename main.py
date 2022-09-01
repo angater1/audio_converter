@@ -15,6 +15,7 @@ from tkinter.filedialog import *
 from pydub import AudioSegment
 from PySide6 import QtCore, QtWidgets, QtGui
 
+
 progressbar = 0
 
 
@@ -141,7 +142,7 @@ class Ui_dialog(object):
         print(name, chosen_format, str(self.file_name), str(self.directory)+"/",
               self.directory + "/" + name + "." + chosen_format)
         AudioSegment.from_file(self.file_name).export(self.directory + "/" + name, format=chosen_format)
-       # subprocess.call([shutil.which("E:\Music"), 'ffmpeg', '-i', 'Darkness.mp3', 'Darkness.wav'])
+        #subprocess.call([shutil.which("E:\Music"), 'ffmpeg', '-i', 'Darkness.mp3', 'Darkness.wav'])
         #subprocess.call(['ffmpeg', '-i', 'Darkness.mp3', 'Darkness.wav'])
         #subprocess.call(['ffmpeg', '-i', self.file_name, self.directory + "/" + name + "." + chosen_format])
 
@@ -173,9 +174,6 @@ class Ui_dialog(object):
         self.comboBox2.setItemText(3, _translate("dialog", "128 kbps"))
         self.comboBox2.setItemText(4, _translate("dialog", "256 kbps"))
         self.comboBox2.setItemText(5, _translate("dialog", "320 kbps"))
-
-
-
 
 if __name__ == "__main__":
     import sys
