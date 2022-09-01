@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import shutil
 
 # Form implementation generated from reading ui file 'konwerter_audio.ui'
 #
@@ -9,8 +10,9 @@
 
 import ffmpeg
 import AudioConverter
+import subprocess
 from tkinter.filedialog import *
-
+from pydub import AudioSegment
 from PySide6 import QtCore, QtWidgets, QtGui
 
 progressbar = 0
@@ -33,13 +35,18 @@ class Ui_dialog(object):
 
         # choose file
         self.pushButton = QtWidgets.QPushButton(dialog, clicked=lambda: self.file())
-        self.pushButton.setGeometry(QtCore.QRect(10, 190, 161, 41))
+        self.pushButton.setGeometry(QtCore.QRect(10, 10, 161, 41))
         self.pushButton.setObjectName("chooseFile")
 
         # choose destination
         self.pushButton_2 = QtWidgets.QPushButton(dialog, clicked=lambda: self.destination())
-        self.pushButton_2.setGeometry(QtCore.QRect(10, 240, 161, 41))
+        self.pushButton_2.setGeometry(QtCore.QRect(220, 10, 161, 41))
         self.pushButton_2.setObjectName("chooseDestination")
+
+        # convert button
+        self.pushButton_3 = QtWidgets.QPushButton(dialog, clicked=lambda: self.convert())
+        self.pushButton_3.setGeometry(QtCore.QRect(10, 250, 100, 32))
+        self.pushButton_3.setObjectName("chooseFile")
 
         self.comboBox = QtWidgets.QComboBox(dialog)
         self.comboBox.setGeometry(QtCore.QRect(260, 110, 69, 22))
@@ -51,13 +58,27 @@ class Ui_dialog(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
 
+        self.comboBox2 = QtWidgets.QComboBox(dialog)
+        self.comboBox2.setGeometry(QtCore.QRect(260, 150, 69, 22))
+        self.comboBox2.setObjectName("comboBox")
+        self.comboBox2.addItem("")
+        self.comboBox2.addItem("")
+        self.comboBox2.addItem("")
+        self.comboBox2.addItem("")
+        self.comboBox2.addItem("")
+        self.comboBox2.addItem("")
+        self.comboBox2.setVisible(False)
+
+
         # progressbar
         self.progressBar = QtWidgets.QProgressBar(dialog)
         self.progressBar.setGeometry(QtCore.QRect(10, 210, 371, 23))
         self.progressBar.setProperty("value", progressbar)
         self.progressBar.setTextVisible(False)
         self.progressBar.setObjectName("progressBar")
-        self.progressBar.setVisible(False)
+        self.progressBar.setVisible(True)
+
+
 
         self.label = QtWidgets.QLabel(dialog)
         self.label.setGeometry(QtCore.QRect(250, 80, 91, 21))
@@ -106,23 +127,54 @@ class Ui_dialog(object):
         # print(self.file_name.split("/"))
         self.retranslateUi(dialog)
 
+    def convert(self):
+        if self.comboBox.currentText() == 'mp3':
+            self.comboBox2.setVisible(True)
+            self.retranslateUi(dialog)
+        else:
+            self.comboBox2.setVisible(False)
+            self.retranslateUi(dialog)
+        #filename without extension
+        input_file = self.file_name.split("/")
+        name = str(input_file[-1]).replace('.mp3', '')
+        chosen_format = str(self.comboBox.currentText())
+        print(name, chosen_format, str(self.file_name), str(self.directory)+"/",
+              self.directory + "/" + name + "." + chosen_format)
+        AudioSegment.from_file(self.file_name).export(self.directory + "/" + name, format=chosen_format)
+       # subprocess.call([shutil.which("E:\Music"), 'ffmpeg', '-i', 'Darkness.mp3', 'Darkness.wav'])
+        #subprocess.call(['ffmpeg', '-i', 'Darkness.mp3', 'Darkness.wav'])
+        #subprocess.call(['ffmpeg', '-i', self.file_name, self.directory + "/" + name + "." + chosen_format])
+
+        #sound = AudioSegment.from_mp3(self.file_name)
+        #sound.export(self.directory + "/" + name + "." + chosen_format, format=chosen_format)
+
+
     def retranslateUi(self, dialog):
         _translate = QtCore.QCoreApplication.translate
         dialog.setWindowTitle(_translate("dialog", "Dialog"))
         self.pushButton.setText(_translate("dialog", "Choose audio file"))
         self.pushButton_2.setText(_translate("dialog", "Choose your destination"))
-        self.comboBox.setItemText(0, _translate("dialog", "MP3"))
-        self.comboBox.setItemText(1, _translate("dialog", "WAV"))
-        self.comboBox.setItemText(2, _translate("dialog", "FLAC"))
-        self.comboBox.setItemText(3, _translate("dialog", "OGG"))
-        self.comboBox.setItemText(4, _translate("dialog", "M4A"))
-        self.comboBox.setItemText(5, _translate("dialog", "AIFF"))
+        self.pushButton_3.setText(_translate("dialog", "Convert"))
+        self.comboBox.setItemText(0, _translate("dialog", "wav"))
+        self.comboBox.setItemText(1, _translate("dialog", "mp3"))
+        self.comboBox.setItemText(2, _translate("dialog", "flac"))
+        self.comboBox.setItemText(3, _translate("dialog", "ogg"))
+        self.comboBox.setItemText(4, _translate("dialog", "m4a"))
+        self.comboBox.setItemText(5, _translate("dialog", "aiff"))
         self.label.setText(_translate("dialog", "Convert to:"))
         self.label_2.setText(_translate("dialog", "Your file:"))
         self.label_3.setText(_translate("dialog", self.file_name.split("/")[-1]))
         self.label_4.setText(_translate("dialog", "-------->"))
         self.label_5.setText(_translate("dialog", self.directory))
         self.label_6.setText(_translate("dialog", "Destination:"))
+        self.comboBox2.setItemText(0, _translate("dialog", "8 kbps"))
+        self.comboBox2.setItemText(1, _translate("dialog", "32 kbps"))
+        self.comboBox2.setItemText(2, _translate("dialog", "64 kbps"))
+        self.comboBox2.setItemText(3, _translate("dialog", "128 kbps"))
+        self.comboBox2.setItemText(4, _translate("dialog", "256 kbps"))
+        self.comboBox2.setItemText(5, _translate("dialog", "320 kbps"))
+
+
 
 
 if __name__ == "__main__":
