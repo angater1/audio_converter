@@ -1,7 +1,8 @@
 from tkinter.filedialog import *
 from PySide6.QtGui import QFont
 from pydub import AudioSegment
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtWidgets
+import eyed3
 
 class Ui_dialog(object):
 
@@ -133,8 +134,7 @@ class Ui_dialog(object):
         name = str(input_file[-1])
         for r in ((".mp3", ""), (".wav", ""), (".flac", ""), (".ogg", ""), (".m4a", ""), (".aiff", "")):
             name = name.replace(*r)
-        #
-
+        
         chosen_format = str(self.comboBox.currentText())
         bitrate = str(self.comboBox2.currentText())
 
@@ -142,6 +142,28 @@ class Ui_dialog(object):
               self.directory + "/" + name + "." + chosen_format, bitrate)
         try:
             if chosen_format == "mp3":
+
+                # comapre input and output bitrate
+                audiofile = eyed3.load(self.file_name)
+                input_bitrate = audiofile.info.bit_rate_str
+                input_bitrate = int(input_bitrate.rstrip(' kb/s'))
+
+                # show allert if input bitrate is less than output bitrate
+                if (input_bitrate < int(bitrate.rstrip('k'))):
+                    msg = QtWidgets.QMessageBox()
+                    msg.setIcon(QtWidgets.QMessageBox.Information)
+                    msg.setWindowTitle("Bitrate Alert")
+                    msg.setText(f"The current bitrate is {bitrate}bps, which is higher than the original file (e.g., {input_bitrate} kbps)." 
+                                "A higher bitrate can lead to audio distortions, loss of quality, or inconsistencies with the original recording."
+                                "To avoid undesirable effects, consider adjusting the conversion settings or selecting a lower bitrate.")
+                    # buttons
+                    continue_button = msg.addButton("Continue", QtWidgets.QMessageBox.AcceptRole)
+                    cancel_button = msg.addButton("Cancel", QtWidgets.QMessageBox.RejectRole)
+                    msg.exec()
+
+                    if msg.clickedButton() == cancel_button:
+                        return
+
                 AudioSegment.from_file(self.file_name).export(self.directory + "/" + name + "." + chosen_format,
                                                               bitrate = bitrate, format=chosen_format)
                 self.progressBar.setVisible(True)
