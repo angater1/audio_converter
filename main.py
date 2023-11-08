@@ -3,6 +3,7 @@ from PySide6.QtGui import QFont
 from pydub import AudioSegment
 from PySide6 import QtCore, QtWidgets
 import eyed3
+import sys
 
 class Ui_dialog(object):
 
@@ -218,8 +219,6 @@ class Ui_dialog(object):
 
 
 if __name__ == "__main__":
-    import sys
-
     app = QtWidgets.QApplication(sys.argv)
     dialog = QtWidgets.QDialog()
     ui = Ui_dialog()
