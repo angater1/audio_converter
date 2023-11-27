@@ -4,6 +4,7 @@ from pydub import AudioSegment
 from PySide6 import QtCore, QtWidgets
 import eyed3
 import sys
+import logging
 
 class Ui_dialog(object):
 
@@ -15,7 +16,7 @@ class Ui_dialog(object):
         self.file_name = file_name
         self.directory = directory
 
-        #ok, cancel
+        #cancel
         self.buttonBox = QtWidgets.QDialogButtonBox(dialog)
         self.buttonBox.setGeometry(QtCore.QRect(210, 250, 161, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
@@ -60,7 +61,7 @@ class Ui_dialog(object):
         self.comboBox2.addItem("")
         self.comboBox2.setVisible(False)
 
-        # progressbar
+        #progressbar
         self.progressBar = QtWidgets.QProgressBar(dialog)
         self.progressBar.setGeometry(QtCore.QRect(10, 210, 371, 23))
         self.progressBar.setTextVisible(False)
@@ -125,16 +126,22 @@ class Ui_dialog(object):
 
     #function that asks for input file
     def file(self):
-        self.file_name = askopenfilename()
-        # print(self.file_name.split("/"))
-        self.retranslateUi(dialog)
+        try:
+            self.file_name = askopenfilename()
+            # print(self.file_name.split("/"))
+            self.retranslateUi(dialog)
+        except Exception as error:
+            logging.error(error)
 
     #function that asks for output directory
     def destination(self):
-        self.directory = askdirectory()
-        # print(self.file_name.split("/"))
-        self.retranslateUi(dialog)
-        self.label_7.setVisible(False)
+        try:
+            self.directory = askdirectory()
+            # print(self.file_name.split("/"))
+            self.retranslateUi(dialog)
+            self.label_7.setVisible(False)
+        except Exception as error:
+            logging.error(error)
 
     #function that does the conversion
     def convert(self):
@@ -205,33 +212,40 @@ class Ui_dialog(object):
             self.retranslateUi(dialog)
 
     def retranslateUi(self, dialog):
-        _translate = QtCore.QCoreApplication.translate
-        dialog.setWindowTitle(_translate("dialog", "Dialog"))
-        self.pushButton.setText(_translate("dialog", "Choose audio file"))
-        self.pushButton_2.setText(_translate("dialog", "Choose your destination"))
-        self.pushButton_3.setText(_translate("dialog", "Convert"))
-        self.comboBox.setItemText(0, _translate("dialog", "wav"))
-        self.comboBox.setItemText(1, _translate("dialog", "mp3"))
-        self.comboBox.setItemText(2, _translate("dialog", "flac"))
-        self.comboBox.setItemText(3, _translate("dialog", "ogg"))
-        self.comboBox.setItemText(4, _translate("dialog", "m4a"))
-        self.comboBox.setItemText(5, _translate("dialog", "aiff"))
-        self.label.setText(_translate("dialog", "Convert to:"))
-        self.label_2.setText(_translate("dialog", "Your file:"))
-        self.label_3.setText(_translate("dialog", self.file_name.split("/")[-1]))
-        self.label_4.setText(_translate("dialog", "-------->"))
-        self.label_5.setText(_translate("dialog", self.directory))
-        self.label_6.setText(_translate("dialog", "Destination:"))
-        self.label_7.setText(_translate("dialog", "CHOOSE OUTPUT!"))
-        self.label_8.setText(_translate("dialog", "CHOOSE INPUT!"))
-        self.comboBox2.setItemText(0, _translate("dialog", "32k"))
-        self.comboBox2.setItemText(1, _translate("dialog", "64k"))
-        self.comboBox2.setItemText(2, _translate("dialog", "128k"))
-        self.comboBox2.setItemText(3, _translate("dialog", "256k"))
-        self.comboBox2.setItemText(4, _translate("dialog", "320k"))
+        try:
+            _translate = QtCore.QCoreApplication.translate
+            dialog.setWindowTitle(_translate("dialog", "Dialog"))
+            self.pushButton.setText(_translate("dialog", "Choose audio file"))
+            self.pushButton_2.setText(_translate("dialog", "Choose your destination"))
+            self.pushButton_3.setText(_translate("dialog", "Convert"))
+            self.comboBox.setItemText(0, _translate("dialog", "wav"))
+            self.comboBox.setItemText(1, _translate("dialog", "mp3"))
+            self.comboBox.setItemText(2, _translate("dialog", "flac"))
+            self.comboBox.setItemText(3, _translate("dialog", "ogg"))
+            self.comboBox.setItemText(4, _translate("dialog", "m4a"))
+            self.comboBox.setItemText(5, _translate("dialog", "aiff"))
+            self.label.setText(_translate("dialog", "Convert to:"))
+            self.label_2.setText(_translate("dialog", "Your file:"))
+            self.label_3.setText(_translate("dialog", self.file_name.split("/")[-1]))
+            self.label_4.setText(_translate("dialog", "-------->"))
+            self.label_5.setText(_translate("dialog", self.directory))
+            self.label_6.setText(_translate("dialog", "Destination:"))
+            self.label_7.setText(_translate("dialog", "CHOOSE OUTPUT!"))
+            self.label_8.setText(_translate("dialog", "CHOOSE INPUT!"))
+            self.comboBox2.setItemText(0, _translate("dialog", "32k"))
+            self.comboBox2.setItemText(1, _translate("dialog", "64k"))
+            self.comboBox2.setItemText(2, _translate("dialog", "128k"))
+            self.comboBox2.setItemText(3, _translate("dialog", "256k"))
+            self.comboBox2.setItemText(4, _translate("dialog", "320k"))
+        except Exception as error:
+            logging.error(error)
+            
 
 
 if __name__ == "__main__":
+    #log file
+    logging.basicConfig(filename='app_log.txt', level=logging.ERROR, format='%(asctime)s [%(levelname)s]: %(message)s')
+
     app = QtWidgets.QApplication(sys.argv)
     dialog = QtWidgets.QDialog()
     ui = Ui_dialog()

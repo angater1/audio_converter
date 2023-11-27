@@ -3,3 +3,4 @@ env
 .*
 test
 __pycache__
+app_log*
