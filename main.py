@@ -9,120 +9,123 @@ import logging
 class Ui_dialog(object):
 
     def setupUi(self, dialog, file_name= "", directory= ""):
-        dialog.setObjectName("dialog")
-        dialog.resize(391, 287)
+        try:
+            dialog.setObjectName("dialog")
+            dialog.resize(391, 287)
 
-        self.progressbar = 0
-        self.file_name = file_name
-        self.directory = directory
+            self.progressbar = 0
+            self.file_name = file_name
+            self.directory = directory
 
-        #cancel
-        self.buttonBox = QtWidgets.QDialogButtonBox(dialog)
-        self.buttonBox.setGeometry(QtCore.QRect(210, 250, 161, 32))
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel)
-        self.buttonBox.setObjectName("buttonBox")
+            #cancel
+            self.buttonBox = QtWidgets.QDialogButtonBox(dialog)
+            self.buttonBox.setGeometry(QtCore.QRect(210, 250, 161, 32))
+            self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+            self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel)
+            self.buttonBox.setObjectName("buttonBox")
 
-        #choose file
-        self.pushButton = QtWidgets.QPushButton(dialog, clicked=lambda: self.file())
-        self.pushButton.setGeometry(QtCore.QRect(10, 10, 161, 41))
-        self.pushButton.setObjectName("chooseFile")
+            #choose file
+            self.pushButton = QtWidgets.QPushButton(dialog, clicked=lambda: self.file())
+            self.pushButton.setGeometry(QtCore.QRect(10, 10, 161, 41))
+            self.pushButton.setObjectName("chooseFile")
 
-        #choose destination
-        self.pushButton_2 = QtWidgets.QPushButton(dialog, clicked=lambda: self.destination())
-        self.pushButton_2.setGeometry(QtCore.QRect(220, 10, 161, 41))
-        self.pushButton_2.setObjectName("chooseDestination")
+            #choose destination
+            self.pushButton_2 = QtWidgets.QPushButton(dialog, clicked=lambda: self.destination())
+            self.pushButton_2.setGeometry(QtCore.QRect(220, 10, 161, 41))
+            self.pushButton_2.setObjectName("chooseDestination")
 
-        #convert button
-        self.pushButton_3 = QtWidgets.QPushButton(dialog, clicked=lambda: self.convert())
-        self.pushButton_3.setGeometry(QtCore.QRect(10, 250, 100, 32))
-        self.pushButton_3.setObjectName("chooseFile")
+            #convert button
+            self.pushButton_3 = QtWidgets.QPushButton(dialog, clicked=lambda: self.convert())
+            self.pushButton_3.setGeometry(QtCore.QRect(10, 250, 100, 32))
+            self.pushButton_3.setObjectName("chooseFile")
 
-        #choose format
-        self.comboBox = QtWidgets.QComboBox(dialog)
-        self.comboBox.setGeometry(QtCore.QRect(260, 110, 69, 22))
-        self.comboBox.setObjectName("comboBox")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.currentTextChanged.connect(self.on_combobox_changed)
+            #choose format
+            self.comboBox = QtWidgets.QComboBox(dialog)
+            self.comboBox.setGeometry(QtCore.QRect(260, 110, 69, 22))
+            self.comboBox.setObjectName("comboBox")
+            self.comboBox.addItem("")
+            self.comboBox.addItem("")
+            self.comboBox.addItem("")
+            self.comboBox.addItem("")
+            self.comboBox.addItem("")
+            self.comboBox.addItem("")
+            self.comboBox.currentTextChanged.connect(self.on_combobox_changed)
 
-        #choose bitrate for mp3
-        self.comboBox2 = QtWidgets.QComboBox(dialog)
-        self.comboBox2.setGeometry(QtCore.QRect(260, 150, 69, 22))
-        self.comboBox2.setObjectName("comboBox")
-        self.comboBox2.addItem("")
-        self.comboBox2.addItem("")
-        self.comboBox2.addItem("")
-        self.comboBox2.addItem("")
-        self.comboBox2.addItem("")
-        self.comboBox2.setVisible(False)
+            #choose bitrate for mp3
+            self.comboBox2 = QtWidgets.QComboBox(dialog)
+            self.comboBox2.setGeometry(QtCore.QRect(260, 150, 69, 22))
+            self.comboBox2.setObjectName("comboBox")
+            self.comboBox2.addItem("")
+            self.comboBox2.addItem("")
+            self.comboBox2.addItem("")
+            self.comboBox2.addItem("")
+            self.comboBox2.addItem("")
+            self.comboBox2.setVisible(False)
 
-        #progressbar
-        self.progressBar = QtWidgets.QProgressBar(dialog)
-        self.progressBar.setGeometry(QtCore.QRect(10, 210, 371, 23))
-        self.progressBar.setTextVisible(False)
-        self.progressBar.setObjectName("progressBar")
-        self.progressBar.setVisible(False)
+            #progressbar
+            self.progressBar = QtWidgets.QProgressBar(dialog)
+            self.progressBar.setGeometry(QtCore.QRect(10, 210, 371, 23))
+            self.progressBar.setTextVisible(False)
+            self.progressBar.setObjectName("progressBar")
+            self.progressBar.setVisible(False)
 
-        self.label = QtWidgets.QLabel(dialog)
-        self.label.setGeometry(QtCore.QRect(250, 80, 91, 21))
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
+            self.label = QtWidgets.QLabel(dialog)
+            self.label.setGeometry(QtCore.QRect(250, 80, 91, 21))
+            self.label.setAlignment(QtCore.Qt.AlignCenter)
+            self.label.setObjectName("label")
 
-        #input file
-        self.label_2 = QtWidgets.QLabel(dialog)
-        self.label_2.setGeometry(QtCore.QRect(20, 110, 91, 21))
-        self.label_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_2.setObjectName("label_2")
+            #input file
+            self.label_2 = QtWidgets.QLabel(dialog)
+            self.label_2.setGeometry(QtCore.QRect(20, 110, 91, 21))
+            self.label_2.setAlignment(QtCore.Qt.AlignCenter)
+            self.label_2.setObjectName("label_2")
 
-        #filename
-        self.label_3 = QtWidgets.QLabel(dialog)
-        self.label_3.setGeometry(QtCore.QRect(100, 112, 100, 21))
-        self.label_3.setAlignment(QtCore.Qt.AlignLeft)
-        self.label_3.setObjectName("label_3")
+            #filename
+            self.label_3 = QtWidgets.QLabel(dialog)
+            self.label_3.setGeometry(QtCore.QRect(100, 112, 100, 21))
+            self.label_3.setAlignment(QtCore.Qt.AlignLeft)
+            self.label_3.setObjectName("label_3")
 
-        #arrow
-        self.label_4 = QtWidgets.QLabel(dialog)
-        self.label_4.setGeometry(QtCore.QRect(190, 100, 47, 41))
-        self.label_4.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_4.setObjectName("label_4")
+            #arrow
+            self.label_4 = QtWidgets.QLabel(dialog)
+            self.label_4.setGeometry(QtCore.QRect(190, 100, 47, 41))
+            self.label_4.setAlignment(QtCore.Qt.AlignCenter)
+            self.label_4.setObjectName("label_4")
 
-        #directory path
-        self.label_5 = QtWidgets.QLabel(dialog)
-        self.label_5.setGeometry(QtCore.QRect(100, 132, 300, 21))
-        self.label_5.setAlignment(QtCore.Qt.AlignLeft)
-        self.label_5.setObjectName("label_5")
+            #directory path
+            self.label_5 = QtWidgets.QLabel(dialog)
+            self.label_5.setGeometry(QtCore.QRect(100, 132, 300, 21))
+            self.label_5.setAlignment(QtCore.Qt.AlignLeft)
+            self.label_5.setObjectName("label_5")
 
-        #destination:
-        self.label_6 = QtWidgets.QLabel(dialog)
-        self.label_6.setGeometry(QtCore.QRect(20, 130, 91, 21))
-        self.label_6.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_6.setObjectName("label_6")
+            #destination:
+            self.label_6 = QtWidgets.QLabel(dialog)
+            self.label_6.setGeometry(QtCore.QRect(20, 130, 91, 21))
+            self.label_6.setAlignment(QtCore.Qt.AlignCenter)
+            self.label_6.setObjectName("label_6")
 
-        #choose output info
-        self.label_7 = QtWidgets.QLabel(dialog)
-        self.label_7.setGeometry(QtCore.QRect(100, 150, 220, 50))
-        self.label_7.setAlignment(QtCore.Qt.AlignLeft)
-        self.label_7.setObjectName("label_7")
-        self.label_7.setFont(QFont('Arial', 15))
-        self.label_7.setVisible(False)
+            #choose output info
+            self.label_7 = QtWidgets.QLabel(dialog)
+            self.label_7.setGeometry(QtCore.QRect(100, 150, 220, 50))
+            self.label_7.setAlignment(QtCore.Qt.AlignLeft)
+            self.label_7.setObjectName("label_7")
+            self.label_7.setFont(QFont('Arial', 15))
+            self.label_7.setVisible(False)
 
-        #choose input info
-        self.label_8 = QtWidgets.QLabel(dialog)
-        self.label_8.setGeometry(QtCore.QRect(100, 150, 220, 50))
-        self.label_8.setAlignment(QtCore.Qt.AlignLeft)
-        self.label_8.setObjectName("label_7")
-        self.label_8.setFont(QFont('Arial', 15))
-        self.label_8.setVisible(False)
+            #choose input info
+            self.label_8 = QtWidgets.QLabel(dialog)
+            self.label_8.setGeometry(QtCore.QRect(100, 150, 220, 50))
+            self.label_8.setAlignment(QtCore.Qt.AlignLeft)
+            self.label_8.setObjectName("label_7")
+            self.label_8.setFont(QFont('Arial', 15))
+            self.label_8.setVisible(False)
 
-        self.retranslateUi(dialog)
-        self.buttonBox.accepted.connect(dialog.accept)  # type: ignore
-        self.buttonBox.rejected.connect(dialog.reject)  # type: ignore
-        QtCore.QMetaObject.connectSlotsByName(dialog)
+            self.retranslateUi(dialog)
+            self.buttonBox.accepted.connect(dialog.accept)  # type: ignore
+            self.buttonBox.rejected.connect(dialog.reject)  # type: ignore
+            QtCore.QMetaObject.connectSlotsByName(dialog)
+        except Exception as error:
+            logging.error(error)
 
     #function that asks for input file
     def file(self):
@@ -204,12 +207,15 @@ class Ui_dialog(object):
 
     #refresh ui on combobox change
     def on_combobox_changed(self):
-        if self.comboBox.currentText() == 'mp3':
-            self.comboBox2.setVisible(True)
-            self.retranslateUi(dialog)
-        else:
-            self.comboBox2.setVisible(False)
-            self.retranslateUi(dialog)
+        try:
+            if self.comboBox.currentText() == 'mp3':
+                self.comboBox2.setVisible(True)
+                self.retranslateUi(dialog)
+            else:
+                self.comboBox2.setVisible(False)
+                self.retranslateUi(dialog)
+        except Exception as error:
+            logging.error(error)
 
     def retranslateUi(self, dialog):
         try:
