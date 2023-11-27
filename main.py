@@ -139,7 +139,7 @@ class Ui_dialog(object):
     #function that does the conversion
     def convert(self):
         # filename without extension
-        if len(self.file_name) == 0:
+        if not self.file_name:
             self.label_8.setVisible(True)
         else:
             self.label_8.setVisible(False)
@@ -169,6 +169,7 @@ class Ui_dialog(object):
                         msg.setText(f"The current bitrate is {bitrate}bps, which is higher than the original file (e.g., {input_bitrate} kbps)." 
                                     "A higher bitrate can lead to audio distortions, loss of quality, or inconsistencies with the original recording."
                                     "To avoid undesirable effects, consider adjusting the conversion settings or selecting a lower bitrate.")
+                        
                         # buttons
                         cancel_button = msg.addButton("Cancel", QtWidgets.QMessageBox.RejectRole)
                         msg.exec()
