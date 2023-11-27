@@ -170,7 +170,6 @@ class Ui_dialog(object):
                                     "A higher bitrate can lead to audio distortions, loss of quality, or inconsistencies with the original recording."
                                     "To avoid undesirable effects, consider adjusting the conversion settings or selecting a lower bitrate.")
                         # buttons
-                        continue_button = msg.addButton("Continue", QtWidgets.QMessageBox.AcceptRole)
                         cancel_button = msg.addButton("Cancel", QtWidgets.QMessageBox.RejectRole)
                         msg.exec()
 
