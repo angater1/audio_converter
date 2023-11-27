@@ -1,1 +1,5 @@
 venv
+env
+.*
+test
+__pycache__
