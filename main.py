@@ -3,6 +3,10 @@ from PySide6.QtGui import QFont
 from pydub import AudioSegment
 from PySide6 import QtCore, QtWidgets
 import eyed3
+import platform
+import sys
+import tkinter as tk
+
 
 class Ui_dialog(object):
 
@@ -218,7 +222,10 @@ class Ui_dialog(object):
 
 
 if __name__ == "__main__":
-    import sys
+    # check if os is macOS
+    if platform.system() == "Darwin":
+        root = tk.Tk()
+        root.withdraw()
 
     app = QtWidgets.QApplication(sys.argv)
     dialog = QtWidgets.QDialog()
