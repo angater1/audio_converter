@@ -141,8 +141,6 @@ class Ui_dialog(object):
         chosen_format = str(self.comboBox.currentText())
         bitrate = str(self.comboBox2.currentText())
 
-        self.label_7.setVisible(True)
-
         print(name, chosen_format, str(self.file_name), str(self.directory) + "/",
               self.directory + "/" + name + "." + chosen_format, bitrate)
         try:
@@ -186,8 +184,7 @@ class Ui_dialog(object):
                     self.progressBar.setValue(self.completed)
         except Exception as error:
             self.label_7.setVisible(True)
-            print(self.label_7.isVisible())
-            # print(error)
+            print(error)
 
     #refresh ui on combobox change
     def on_combobox_changed(self):
