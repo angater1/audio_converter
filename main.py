@@ -4,10 +4,12 @@ from pydub import AudioSegment
 from PySide6 import QtCore, QtWidgets
 import eyed3
 import sys
+import platform
+import tkinter as tk
 
 class Ui_dialog(object):
 
-    def setupUi(self, dialog, file_name=" ", directory=" "):
+    def setupUi(self, dialog, file_name="", directory=""):
         dialog.setObjectName("dialog")
         dialog.resize(391, 287)
 
@@ -139,6 +141,8 @@ class Ui_dialog(object):
         chosen_format = str(self.comboBox.currentText())
         bitrate = str(self.comboBox2.currentText())
 
+        self.label_7.setVisible(True)
+
         print(name, chosen_format, str(self.file_name), str(self.directory) + "/",
               self.directory + "/" + name + "." + chosen_format, bitrate)
         try:
@@ -180,17 +184,23 @@ class Ui_dialog(object):
                 while self.completed < 100:
                     self.completed += 0.0001
                     self.progressBar.setValue(self.completed)
-        except:
+        except Exception as error:
             self.label_7.setVisible(True)
+            print(self.label_7.isVisible())
+            # print(error)
 
     #refresh ui on combobox change
     def on_combobox_changed(self):
-        if self.comboBox.currentText() == 'mp3':
-            self.comboBox2.setVisible(True)
-            self.retranslateUi(dialog)
-        else:
-            self.comboBox2.setVisible(False)
-            self.retranslateUi(dialog)
+        try:
+            if self.comboBox.currentText() == 'mp3':
+                self.comboBox2.setVisible(True)
+                self.retranslateUi(dialog)
+            else:
+                self.comboBox2.setVisible(False)
+                self.retranslateUi(dialog)
+        except Exception as error:
+            pass
+            # print(error)
 
     def retranslateUi(self, dialog):
         _translate = QtCore.QCoreApplication.translate
