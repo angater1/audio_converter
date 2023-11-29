@@ -1,16 +1,6 @@
 from PySide6 import QtWidgets
-from PySide6.QtTest import QTest
-from unittest.mock import patch
 from main import Ui_dialog
-import pytest
-# from pytestqt.qtbot import QtBot
 import sys
-import pytestqt
-
-@pytest.fixture
-def qtbot(qtbot):
-    """Pytest fixture for QtBot."""
-    return qtbot
 
 def build_up():
     if not QtWidgets.QApplication.instance():
@@ -35,3 +25,17 @@ def test_label():
 
     assert ui.file_name == ""
     assert ui.directory == ""
+
+def test_comobox():
+    app, dialog, ui = build_up()
+    type_list = ["wav","mp3","flac","ogg","m4a","aiff"]
+
+    for i in range(ui.comboBox.count()):
+        assert ui.comboBox.itemText(i) == type_list[i]
+
+    type_list_2 = ["32k","64k","128k","256k","320k"]
+    
+    for i in range(ui.comboBox2.count()):
+        assert ui.comboBox2.itemText(i) == type_list_2[i]
+
+        
