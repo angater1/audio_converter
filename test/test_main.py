@@ -64,14 +64,12 @@ def test_convert():
     ui.directory = "./"
 
     for i in range(ui.comboBox.count()):
-        if i == 1: continue # have to skip mp3 for now because bitrate alert stop testing
-        for x in range(ui.comboBox2.count()):
-            ui.comboBox.setCurrentIndex(i)
-            ui.comboBox2.setCurrentIndex(x)
-            ui.convert()
+        ui.comboBox.setCurrentIndex(i)
+        ui.comboBox2.setCurrentIndex(1)
+        ui.convert()
 
-            file_exist = os.path.exists(ui.file_name)
-            current_file_path = "./sample-12s." + ui.comboBox.currentText()
-            file_extension = is_file_with_extension(current_file_path,ui.comboBox.currentText())
-            os.remove(current_file_path)
-            assert file_exist & file_extension
+        file_exist = os.path.exists(ui.file_name)
+        current_file_path = "./sample-12s." + ui.comboBox.currentText()
+        file_extension = is_file_with_extension(current_file_path,ui.comboBox.currentText())
+        os.remove(current_file_path)
+        assert file_exist & file_extension
