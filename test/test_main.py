@@ -59,17 +59,54 @@ def test_comobox():
         
 def test_convert():
     app, dialog, ui = build_up()
+    extension = ["wav","mp3","flac","ogg","m4a","aiff"]
 
     ui.file_name = "test/sample-12s.mp3"
     ui.directory = "./"
+    ui.comboBox2.setCurrentIndex(1)
 
     for i in range(ui.comboBox.count()):
         ui.comboBox.setCurrentIndex(i)
-        ui.comboBox2.setCurrentIndex(1)
         ui.convert()
 
-        file_exist = os.path.exists(ui.file_name)
         current_file_path = "./sample-12s." + ui.comboBox.currentText()
+        file_exist = os.path.exists(current_file_path)
         file_extension = is_file_with_extension(current_file_path,ui.comboBox.currentText())
-        os.remove(current_file_path)
-        assert file_exist & file_extension
+        
+        if file_extension == False or file_exist == False:
+            for i in extension:
+                try:
+                    os.remove("sample-12s." + i)
+                except:
+                    continue
+
+            assert file_exist & file_extension
+
+
+    ui.directory = "test/music_smaple_test_file"
+    file_extension, file_exist = False, False
+
+    for i in extension:
+        for x in range(ui.comboBox.count()):
+            ui.file_name = "sample-12s." + i
+            ui.comboBox.setCurrentIndex(x)
+            print(ui.comboBox.currentText())
+            ui.convert()
+
+            current_file_path = "test/music_smaple_test_file/sample-12s." + ui.comboBox.currentText()
+            file_exist = os.path.exists(current_file_path)
+            file_extension = is_file_with_extension(current_file_path,ui.comboBox.currentText())
+        
+            try:
+                os.remove(current_file_path)
+            except:
+                if file_extension == False or file_exist == False:
+                    for i in extension:
+                        try:
+                            os.remove("sample-12s." + i)
+                        except:
+                            continue
+
+                    assert file_exist & file_extension
+
+test_convert()
