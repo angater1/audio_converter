@@ -233,12 +233,6 @@ class Ui_dialog(object):
 
 if __name__ == "__main__":
     import sys
-    import platform
-    import tkinter as tk
-
-    if platform.system() == "Darwin":
-        root = tk.Tk()
-        root.withdraw()
 
     app = QtWidgets.QApplication(sys.argv)
     dialog = QtWidgets.QDialog()
