@@ -6,13 +6,14 @@ import eyed3
 
 class Ui_dialog(object):
 
-    def setupUi(self, dialog, file_name=" ", directory=" "):
+    def setupUi(self, dialog, file_name="", directory=""):
         dialog.setObjectName("dialog")
         dialog.resize(391, 287)
 
         self.progressbar = 0
         self.file_name = file_name
         self.directory = directory
+        self.name = ""
 
         #ok, cancel
         self.buttonBox = QtWidgets.QDialogButtonBox(dialog)
@@ -89,13 +90,7 @@ class Ui_dialog(object):
         self.label_4.setAlignment(QtCore.Qt.AlignCenter)
         self.label_4.setObjectName("label_4")
 
-        #directory path
-        self.label_5 = QtWidgets.QLabel(dialog)
-        self.label_5.setGeometry(QtCore.QRect(100, 132, 300, 21))
-        self.label_5.setAlignment(QtCore.Qt.AlignLeft)
-        self.label_5.setObjectName("label_5")
-
-        #destination:
+        #destination label:
         self.label_6 = QtWidgets.QLabel(dialog)
         self.label_6.setGeometry(QtCore.QRect(20, 130, 91, 21))
         self.label_6.setAlignment(QtCore.Qt.AlignCenter)
@@ -103,11 +98,16 @@ class Ui_dialog(object):
 
         #choose output info
         self.label_7 = QtWidgets.QLabel(dialog)
-        self.label_7.setGeometry(QtCore.QRect(100, 150, 220, 50))
+        self.label_7.setGeometry(QtCore.QRect(100, 200, 220, 50))
         self.label_7.setAlignment(QtCore.Qt.AlignLeft)
         self.label_7.setObjectName("label_7")
         self.label_7.setFont(QFont('Arial', 15))
         self.label_7.setVisible(False)
+
+        #output text edit
+        self.text_edit = QtWidgets.QLineEdit(dialog)
+        self.text_edit.setPlaceholderText("destination path")
+        self.text_edit.setGeometry(20, 160, 200, 21)
 
         self.retranslateUi(dialog)
         self.buttonBox.accepted.connect(dialog.accept)  # type: ignore
@@ -118,29 +118,33 @@ class Ui_dialog(object):
     def file(self):
         self.file_name = askopenfilename()
         # print(self.file_name.split("/"))
+        self.input_file = self.file_name.split("/")
+        self.name = str(self.input_file[-1])
         self.retranslateUi(dialog)
 
     #function that asks for output directory
     def destination(self):
         self.directory = askdirectory()
-        # print(self.file_name.split("/"))
+        if self.directory != "":
+            self.directory += "/"
         self.retranslateUi(dialog)
-        self.label_7.setVisible(False)
 
     #function that does the conversion
     def convert(self):
         # filename without extension
         input_file = self.file_name.split("/")
         name = str(input_file[-1])
-        for r in ((".mp3", ""), (".wav", ""), (".flac", ""), (".ogg", ""), (".m4a", ""), (".aiff", "")):
+        for r in ((".mp3", ""), (".wav", ""), (".flac", ""), (".ogg", ""), (".m4a", ""), (".aiff", "")): #delete file extension
             name = name.replace(*r)
         
         chosen_format = str(self.comboBox.currentText())
         bitrate = str(self.comboBox2.currentText())
 
-        print(name, chosen_format, str(self.file_name), str(self.directory) + "/",
-              self.directory + "/" + name + "." + chosen_format, bitrate)
+        name = self.text_edit.text() + "/" + name
+        print(self.text_edit.text() + "/" + name)
+
         try:
+            self.label_7.setVisible(False)
             if chosen_format == "mp3":
 
                 # comapre input and output bitrate
@@ -164,7 +168,7 @@ class Ui_dialog(object):
                     if msg.clickedButton() == cancel_button:
                         return
 
-                AudioSegment.from_file(self.file_name).export(self.directory + "/" + name + "." + chosen_format,
+                AudioSegment.from_file(self.file_name).export(self.text_edit.text(),
                                                               bitrate = bitrate, format=chosen_format)
                 self.progressBar.setVisible(True)
                 self.completed = 0
@@ -172,24 +176,28 @@ class Ui_dialog(object):
                     self.completed += 0.0001
                     self.progressBar.setValue(self.completed)
             else:
-                AudioSegment.from_file(self.file_name).export(self.directory + "/" + name + "." + chosen_format,
+                AudioSegment.from_file(self.file_name).export(self.text_edit.text(),
                                                               format=chosen_format)
                 self.progressBar.setVisible(True)
                 self.completed = 0
                 while self.completed < 100:
                     self.completed += 0.0001
                     self.progressBar.setValue(self.completed)
-        except:
+        except Exception as error:
             self.label_7.setVisible(True)
+            print(error)
 
     #refresh ui on combobox change
     def on_combobox_changed(self):
+        if self.name != "":
+            for r in ((".mp3", ""), (".wav", ""), (".flac", ""), (".ogg", ""), (".m4a", ""), (".aiff", "")): #delete file extension
+                self.name = self.name.replace(*r)
+            self.name = self.name + "." + self.comboBox.currentText()
         if self.comboBox.currentText() == 'mp3':
             self.comboBox2.setVisible(True)
-            self.retranslateUi(dialog)
         else:
             self.comboBox2.setVisible(False)
-            self.retranslateUi(dialog)
+        self.retranslateUi(dialog)
 
     def retranslateUi(self, dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -207,7 +215,6 @@ class Ui_dialog(object):
         self.label_2.setText(_translate("dialog", "Your file:"))
         self.label_3.setText(_translate("dialog", self.file_name.split("/")[-1]))
         self.label_4.setText(_translate("dialog", "-------->"))
-        self.label_5.setText(_translate("dialog", self.directory))
         self.label_6.setText(_translate("dialog", "Destination:"))
         self.label_7.setText(_translate("dialog", "CHOOSE OUTPUT!"))
         self.comboBox2.setItemText(0, _translate("dialog", "32k"))
@@ -215,6 +222,13 @@ class Ui_dialog(object):
         self.comboBox2.setItemText(2, _translate("dialog", "128k"))
         self.comboBox2.setItemText(3, _translate("dialog", "256k"))
         self.comboBox2.setItemText(4, _translate("dialog", "320k"))
+
+        #set text in destination text edit
+        dest_text = self.text_edit.text()
+        if dest_text == "":
+            self.text_edit.setText(_translate("dialog", self.directory + self.name))
+        else:
+            self.text_edit.setText(_translate("dialog", self.directory + self.name))
 
 
 if __name__ == "__main__":
