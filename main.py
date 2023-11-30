@@ -98,7 +98,7 @@ class Ui_dialog(object):
 
         #choose output info
         self.label_7 = QtWidgets.QLabel(dialog)
-        self.label_7.setGeometry(QtCore.QRect(100, 150, 220, 50))
+        self.label_7.setGeometry(QtCore.QRect(100, 200, 220, 50))
         self.label_7.setAlignment(QtCore.Qt.AlignLeft)
         self.label_7.setObjectName("label_7")
         self.label_7.setFont(QFont('Arial', 15))
@@ -128,7 +128,6 @@ class Ui_dialog(object):
         if self.directory != "":
             self.directory += "/"
         self.retranslateUi(dialog)
-        self.label_7.setVisible(False)
 
     #function that does the conversion
     def convert(self):
@@ -145,6 +144,7 @@ class Ui_dialog(object):
         print(self.text_edit.text() + "/" + name)
 
         try:
+            self.label_7.setVisible(False)
             if chosen_format == "mp3":
 
                 # comapre input and output bitrate
