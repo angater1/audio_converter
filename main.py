@@ -226,6 +226,10 @@ class Ui_dialog(object):
 
 
 if __name__ == "__main__":
+    if platform.system() == "Darwin":
+        root = tk.Tk()
+        root.withdraw()
+
     app = QtWidgets.QApplication(sys.argv)
     dialog = QtWidgets.QDialog()
     ui = Ui_dialog()
