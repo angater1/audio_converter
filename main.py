@@ -89,13 +89,7 @@ class Ui_dialog(object):
         self.label_4.setAlignment(QtCore.Qt.AlignCenter)
         self.label_4.setObjectName("label_4")
 
-        #directory path
-        self.label_5 = QtWidgets.QLabel(dialog)
-        self.label_5.setGeometry(QtCore.QRect(100, 132, 300, 21))
-        self.label_5.setAlignment(QtCore.Qt.AlignLeft)
-        self.label_5.setObjectName("label_5")
-
-        #destination:
+        #destination label:
         self.label_6 = QtWidgets.QLabel(dialog)
         self.label_6.setGeometry(QtCore.QRect(20, 130, 91, 21))
         self.label_6.setAlignment(QtCore.Qt.AlignCenter)
@@ -108,6 +102,11 @@ class Ui_dialog(object):
         self.label_7.setObjectName("label_7")
         self.label_7.setFont(QFont('Arial', 15))
         self.label_7.setVisible(False)
+
+        #output text edit
+        self.text_edit = QtWidgets.QLineEdit(dialog)
+        self.text_edit.setPlaceholderText("destination path")
+        self.text_edit.setGeometry(20, 160, 200, 21)
 
         self.retranslateUi(dialog)
         self.buttonBox.accepted.connect(dialog.accept)  # type: ignore
@@ -134,12 +133,15 @@ class Ui_dialog(object):
         name = str(input_file[-1])
         for r in ((".mp3", ""), (".wav", ""), (".flac", ""), (".ogg", ""), (".m4a", ""), (".aiff", "")):
             name = name.replace(*r)
+            print(name)
         
         chosen_format = str(self.comboBox.currentText())
         bitrate = str(self.comboBox2.currentText())
 
-        print(name, chosen_format, str(self.file_name), str(self.directory) + "/",
-              self.directory + "/" + name + "." + chosen_format, bitrate)
+        print(self.text_edit.text() + "/" + name)
+
+        # print(name, chosen_format, str(self.file_name), str(self.directory) + "/",
+        #       self.directory + "/" + name + "." + chosen_format, bitrate)
         try:
             if chosen_format == "mp3":
 
@@ -207,9 +209,9 @@ class Ui_dialog(object):
         self.label_2.setText(_translate("dialog", "Your file:"))
         self.label_3.setText(_translate("dialog", self.file_name.split("/")[-1]))
         self.label_4.setText(_translate("dialog", "-------->"))
-        self.label_5.setText(_translate("dialog", self.directory))
         self.label_6.setText(_translate("dialog", "Destination:"))
         self.label_7.setText(_translate("dialog", "CHOOSE OUTPUT!"))
+        self.text_edit.setText(_translate("dialog", self.directory))
         self.comboBox2.setItemText(0, _translate("dialog", "32k"))
         self.comboBox2.setItemText(1, _translate("dialog", "64k"))
         self.comboBox2.setItemText(2, _translate("dialog", "128k"))
@@ -219,6 +221,12 @@ class Ui_dialog(object):
 
 if __name__ == "__main__":
     import sys
+    import platform
+    import tkinter as tk
+
+    if platform.system() == "Darwin":
+        root = tk.Tk()
+        root.withdraw()
 
     app = QtWidgets.QApplication(sys.argv)
     dialog = QtWidgets.QDialog()
