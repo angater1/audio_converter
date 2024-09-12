@@ -3,10 +3,11 @@ from PySide6.QtGui import QFont
 from pydub import AudioSegment
 from PySide6 import QtCore, QtWidgets
 import eyed3
+import sys
 
 class Ui_dialog(object):
 
-    def setupUi(self, dialog, file_name=" ", directory=" "):
+    def setupUi(self, dialog, file_name= "", directory= ""):
         dialog.setObjectName("dialog")
         dialog.resize(391, 287)
 
@@ -109,6 +110,14 @@ class Ui_dialog(object):
         self.label_7.setFont(QFont('Arial', 15))
         self.label_7.setVisible(False)
 
+        #choose input info
+        self.label_8 = QtWidgets.QLabel(dialog)
+        self.label_8.setGeometry(QtCore.QRect(100, 150, 220, 50))
+        self.label_8.setAlignment(QtCore.Qt.AlignLeft)
+        self.label_8.setObjectName("label_7")
+        self.label_8.setFont(QFont('Arial', 15))
+        self.label_8.setVisible(False)
+
         self.retranslateUi(dialog)
         self.buttonBox.accepted.connect(dialog.accept)  # type: ignore
         self.buttonBox.rejected.connect(dialog.reject)  # type: ignore
@@ -130,57 +139,61 @@ class Ui_dialog(object):
     #function that does the conversion
     def convert(self):
         # filename without extension
-        input_file = self.file_name.split("/")
-        name = str(input_file[-1])
-        for r in ((".mp3", ""), (".wav", ""), (".flac", ""), (".ogg", ""), (".m4a", ""), (".aiff", "")):
-            name = name.replace(*r)
-        
-        chosen_format = str(self.comboBox.currentText())
-        bitrate = str(self.comboBox2.currentText())
+        if not self.file_name:
+            self.label_8.setVisible(True)
+        else:
+            self.label_8.setVisible(False)
+            input_file = self.file_name.split("/")
+            name = str(input_file[-1])
+            for r in ((".mp3", ""), (".wav", ""), (".flac", ""), (".ogg", ""), (".m4a", ""), (".aiff", "")):
+                name = name.replace(*r)
+            
+            chosen_format = str(self.comboBox.currentText())
+            bitrate = str(self.comboBox2.currentText())
 
-        print(name, chosen_format, str(self.file_name), str(self.directory) + "/",
-              self.directory + "/" + name + "." + chosen_format, bitrate)
-        try:
-            if chosen_format == "mp3":
+            print(name, chosen_format, str(self.file_name), str(self.directory) + "/",
+                self.directory + "/" + name + "." + chosen_format, bitrate)
+            try:
+                if chosen_format == "mp3":
 
-                # comapre input and output bitrate
-                audiofile = eyed3.load(self.file_name)
-                input_bitrate = audiofile.info.bit_rate_str
-                input_bitrate = int(input_bitrate.rstrip(' kb/s'))
+                    # comapre input and output bitrate
+                    audiofile = eyed3.load(self.file_name)
+                    input_bitrate = audiofile.info.bit_rate_str
+                    input_bitrate = int(input_bitrate.rstrip(' kb/s'))
 
-                # show allert if input bitrate is less than output bitrate
-                if (input_bitrate < int(bitrate.rstrip('k'))):
-                    msg = QtWidgets.QMessageBox()
-                    msg.setIcon(QtWidgets.QMessageBox.Information)
-                    msg.setWindowTitle("Bitrate Alert")
-                    msg.setText(f"The current bitrate is {bitrate}bps, which is higher than the original file (e.g., {input_bitrate} kbps)." 
-                                "A higher bitrate can lead to audio distortions, loss of quality, or inconsistencies with the original recording."
-                                "To avoid undesirable effects, consider adjusting the conversion settings or selecting a lower bitrate.")
-                    # buttons
-                    continue_button = msg.addButton("Continue", QtWidgets.QMessageBox.AcceptRole)
-                    cancel_button = msg.addButton("Cancel", QtWidgets.QMessageBox.RejectRole)
-                    msg.exec()
+                    # show allert if input bitrate is less than output bitrate
+                    if (input_bitrate < int(bitrate.rstrip('k'))):
+                        msg = QtWidgets.QMessageBox()
+                        msg.setIcon(QtWidgets.QMessageBox.Information)
+                        msg.setWindowTitle("Bitrate Alert")
+                        msg.setText(f"The current bitrate is {bitrate}bps, which is higher than the original file (e.g., {input_bitrate} kbps)." 
+                                    "A higher bitrate can lead to audio distortions, loss of quality, or inconsistencies with the original recording."
+                                    "To avoid undesirable effects, consider adjusting the conversion settings or selecting a lower bitrate.")
+                        
+                        # buttons
+                        cancel_button = msg.addButton("Cancel", QtWidgets.QMessageBox.RejectRole)
+                        msg.exec()
 
-                    if msg.clickedButton() == cancel_button:
-                        return
+                        if msg.clickedButton() == cancel_button:
+                            return
 
-                AudioSegment.from_file(self.file_name).export(self.directory + "/" + name + "." + chosen_format,
-                                                              bitrate = bitrate, format=chosen_format)
-                self.progressBar.setVisible(True)
-                self.completed = 0
-                while self.completed < 100:
-                    self.completed += 0.0001
-                    self.progressBar.setValue(self.completed)
-            else:
-                AudioSegment.from_file(self.file_name).export(self.directory + "/" + name + "." + chosen_format,
-                                                              format=chosen_format)
-                self.progressBar.setVisible(True)
-                self.completed = 0
-                while self.completed < 100:
-                    self.completed += 0.0001
-                    self.progressBar.setValue(self.completed)
-        except:
-            self.label_7.setVisible(True)
+                    AudioSegment.from_file(self.file_name).export(self.directory + "/" + name + "." + chosen_format,
+                                                                bitrate = bitrate, format=chosen_format)
+                    self.progressBar.setVisible(True)
+                    self.completed = 0
+                    while self.completed < 100:
+                        self.completed += 0.0001
+                        self.progressBar.setValue(self.completed)
+                else:
+                    AudioSegment.from_file(self.file_name).export(self.directory + "/" + name + "." + chosen_format,
+                                                                format=chosen_format)
+                    self.progressBar.setVisible(True)
+                    self.completed = 0
+                    while self.completed < 100:
+                        self.completed += 0.0001
+                        self.progressBar.setValue(self.completed)
+            except:
+                self.label_7.setVisible(True)
 
     #refresh ui on combobox change
     def on_combobox_changed(self):
@@ -210,6 +223,7 @@ class Ui_dialog(object):
         self.label_5.setText(_translate("dialog", self.directory))
         self.label_6.setText(_translate("dialog", "Destination:"))
         self.label_7.setText(_translate("dialog", "CHOOSE OUTPUT!"))
+        self.label_8.setText(_translate("dialog", "CHOOSE INPUT!"))
         self.comboBox2.setItemText(0, _translate("dialog", "32k"))
         self.comboBox2.setItemText(1, _translate("dialog", "64k"))
         self.comboBox2.setItemText(2, _translate("dialog", "128k"))
@@ -218,8 +232,6 @@ class Ui_dialog(object):
 
 
 if __name__ == "__main__":
-    import sys
-
     app = QtWidgets.QApplication(sys.argv)
     dialog = QtWidgets.QDialog()
     ui = Ui_dialog()
